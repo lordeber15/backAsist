@@ -47,6 +47,7 @@ const Attendance = sequelize.define('Attendance', {
   attendance_type: {
     type: DataTypes.ENUM('entry', 'exit'),
     allowNull: false,
+    defaultValue: 'entry',
   },
   timestamp: {
     type: DataTypes.DATE,
