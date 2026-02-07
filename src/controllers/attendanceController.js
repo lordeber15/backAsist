@@ -7,6 +7,11 @@ exports.recordAttendance = async (req, res) => {
     const { latitude, longitude, gps_accuracy, device_model } = req.body;
     const userId = req.user.id;
 
+    // Validate photo upload
+    if (!req.file) {
+      return res.status(400).json({ message: 'Photo is required for attendance' });
+    }
+
     // Get active geographic point
     const activePoint = await GeographicPoint.findOne({ where: { status: 'active' } });
 
@@ -16,8 +21,8 @@ exports.recordAttendance = async (req, res) => {
 
     // Calculate distance
     const distance = getDistanceFromLatLonInMeters(
-      latitude,
-      longitude,
+      parseFloat(latitude),
+      parseFloat(longitude),
       activePoint.latitude,
       activePoint.longitude
     );
@@ -26,15 +31,16 @@ exports.recordAttendance = async (req, res) => {
     const isValid = distance <= activePoint.radius_meters;
     const status = isValid ? 'VALID' : 'INVALID';
 
-    // Save record
+    // Save record with photo path
     const attendance = await Attendance.create({
       user_id: userId,
-      latitude,
-      longitude,
-      gps_accuracy,
+      latitude: parseFloat(latitude),
+      longitude: parseFloat(longitude),
+      gps_accuracy: parseFloat(gps_accuracy),
       calculated_distance: distance,
       validation_status: status,
       device_model,
+      photo_path: req.file.path,
     });
 
     if (isValid) {

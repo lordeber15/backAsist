@@ -40,6 +40,10 @@ const Attendance = sequelize.define('Attendance', {
     type: DataTypes.STRING,
     allowNull: true,
   },
+  photo_path: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
   timestamp: {
     type: DataTypes.DATE,
     defaultValue: DataTypes.NOW,
