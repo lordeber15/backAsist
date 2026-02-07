@@ -15,5 +15,6 @@ app.get('/', (req, res) => {
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/attendance', require('./routes/attendanceRoutes'));
 app.use('/api/point', require('./routes/pointRoutes'));
+app.use('/api/admin', require('./routes/adminRoutes'));
 
 module.exports = app;

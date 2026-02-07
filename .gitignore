@@ -23,7 +23,7 @@ git
 # VS Code which you may wish to be included in version control, so this line
 # is commented out by default.
 #.vscode/
-
+deploy.sh
 # Flutter/Dart/Pub related
 **/doc/api/
 **/ios/Flutter/.last_build_id
