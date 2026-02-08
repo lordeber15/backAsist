@@ -1,42 +1,49 @@
-// Helper functions for date operations
+const moment = require('moment-timezone');
+
+// Set default timezone to Lima
+const TIMEZONE = 'America/Lima';
 
 /**
- * Get start of day (00:00:00) for a given date
+ * Get current date/time in Lima timezone
  */
-exports.getStartOfDay = (date = new Date()) => {
-  const start = new Date(date);
-  start.setHours(0, 0, 0, 0);
-  return start;
+exports.getNow = () => {
+  return moment.tz(TIMEZONE).toDate();
 };
 
 /**
- * Get end of day (23:59:59) for a given date
+ * Get start of day (00:00:00) for a given date in Lima timezone
  */
-exports.getEndOfDay = (date = new Date()) => {
-  const end = new Date(date);
-  end.setHours(23, 59, 59, 999);
-  return end;
+exports.getStartOfDay = (date) => {
+  const targetDate = date ? moment.tz(date, TIMEZONE) : moment.tz(TIMEZONE);
+  return targetDate.startOf('day').toDate();
 };
 
 /**
- * Check if two dates are on the same day
+ * Get end of day (23:59:59) for a given date in Lima timezone
+ */
+exports.getEndOfDay = (date) => {
+  const targetDate = date ? moment.tz(date, TIMEZONE) : moment.tz(TIMEZONE);
+  return targetDate.endOf('day').toDate();
+};
+
+/**
+ * Check if two dates are on the same day in Lima timezone
  */
 exports.isSameDay = (date1, date2) => {
-  return (
-    date1.getFullYear() === date2.getFullYear() &&
-    date1.getMonth() === date2.getMonth() &&
-    date1.getDate() === date2.getDate()
-  );
+  const d1 = moment.tz(date1, TIMEZONE);
+  const d2 = moment.tz(date2, TIMEZONE);
+  return d1.format('YYYY-MM-DD') === d2.format('YYYY-MM-DD');
 };
 
 /**
- * Group attendance records by day
+ * Group attendance records by day in Lima timezone
  */
 exports.groupByDay = (records) => {
   const grouped = {};
   
   records.forEach(record => {
-    const dateKey = new Date(record.timestamp).toISOString().split('T')[0];
+    // Convert timestamp to Lima timezone and get date key
+    const dateKey = moment.tz(record.timestamp, TIMEZONE).format('YYYY-MM-DD');
     
     if (!grouped[dateKey]) {
       grouped[dateKey] = {
