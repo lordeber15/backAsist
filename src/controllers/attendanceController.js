@@ -57,7 +57,10 @@ exports.recordAttendance = async (req, res) => {
     const isValid = distance <= activePoint.radius_meters;
     const status = isValid ? 'VALID' : 'INVALID';
 
-    // Save record with photo path and attendance type
+    // Save record with photo path, attendance type, and Lima timezone timestamp
+    const moment = require('moment-timezone');
+    const limaTime = moment.tz('America/Lima').toDate();
+    
     const attendance = await Attendance.create({
       user_id: userId,
       latitude: parseFloat(latitude),
@@ -68,6 +71,7 @@ exports.recordAttendance = async (req, res) => {
       device_model,
       photo_path: req.file.path,
       attendance_type: attendanceType,
+      timestamp: limaTime,
     });
 
     const typeLabel = attendanceType === 'entry' ? 'Entrada' : 'Salida';
